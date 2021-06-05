@@ -1,0 +1,41 @@
+version: '3.7'
+services:
+  db:
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    ports:
+      - '8307:3306'
+    expose:
+      - '3306'
+    volumes:
+      - my-sql:/var/lib/mysql
+  app:   
+    build:
+      context: ./datamodel
+      dockerfile: Dockerfile
+    env_file: .env
+    depends_on:
+      - db
+    networks:     
+     - default
+    ports:
+      - "8083:10001" 
+     
+  server:
+    build:
+      context: ./application
+      dockerfile: Dockerfile
+    env_file: .env
+    networks:
+      - default
+    ports:
+      - "8084:10000"
+
+volumes:
+  my-sql:
+

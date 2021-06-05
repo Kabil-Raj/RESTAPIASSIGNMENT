@@ -1,0 +1,34 @@
+{
+	"info": {
+		"_postman_id": "9ec9f4d2-df46-45cd-afd5-9f9c4e42ab7f",
+		"name": "AmazonScrapper",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "ScrapRequest",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8084/scrapproduct?url=https://www.amazon.in/Yuwell-Portable-Concentrator-Machine-concentration/dp/B093YBRNGY/ref=lp_6504395031_1_1?s=specialty-aps",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8084",
+					"path": [
+						"scrapproduct"
+					],
+					"query": [
+						{
+							"key": "url",
+							"value": "https://www.amazon.in/Yuwell-Portable-Concentrator-Machine-concentration/dp/B093YBRNGY/ref=lp_6504395031_1_1?s=specialty-aps"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
