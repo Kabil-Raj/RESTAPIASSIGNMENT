@@ -6,25 +6,57 @@
 	},
 	"item": [
 		{
-			"name": "ScrapRequest",
+			"name": "ScrapeRequest",
 			"request": {
 				"method": "POST",
 				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"url\":\"https://www.amazon.in/Yuwell-Portable-Concentrator-Machine-concentration/dp/B093YBRNGY/ref=lp_6504395031_1_1?s=specialty-aps\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
-					"raw": "http://localhost:8084/scrapproduct?url=https://www.amazon.in/Yuwell-Portable-Concentrator-Machine-concentration/dp/B093YBRNGY/ref=lp_6504395031_1_1?s=specialty-aps",
+					"raw": "http://localhost:8084/scrape/product",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8084",
 					"path": [
-						"scrapproduct"
-					],
-					"query": [
-						{
-							"key": "url",
-							"value": "https://www.amazon.in/Yuwell-Portable-Concentrator-Machine-concentration/dp/B093YBRNGY/ref=lp_6504395031_1_1?s=specialty-aps"
+						"scrape",
+						"product"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TestRequest",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\t\"ProductName\":        \"exampleProduct\",\r\n\t\t\"ProductImageUrl\":    \"https://image/url.jpg\",\r\n\t\t\"ProductDescription\": \"description about the product\",\r\n\t\t\"ProductPrice\":       \"499\",\r\n\t\t\"ProductReviews\":     \"250\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
 						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8083/storedata",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"storedata"
 					]
 				}
 			},
