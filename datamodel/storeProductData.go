@@ -15,23 +15,27 @@ import (
 
 func handleRequests() {
 	myRouter := mux.NewRouter().StrictSlash(true)
-	myRouter.HandleFunc("/storedata", productScrappedData).Methods("POST")
+	myRouter.HandleFunc("/storedata", storeProductData).Methods("POST")
 	log.Fatal(http.ListenAndServe(":"+os.Getenv("STOREDATA_PORT"), myRouter))
 }
 
-func productScrappedData(w http.ResponseWriter, req *http.Request) {
-	var result map[string]string
-	json.NewDecoder(req.Body).Decode(&result)
-	saveDataInDatabase(result["ProductName"], result["ProductImageUrl"], result["ProductDescription"], result["ProductPrice"], result["ProductReviews"], time.Now())
+func storeProductData(w http.ResponseWriter, req *http.Request) {
+	var productDetailMap map[string]string
+	json.NewDecoder(req.Body).Decode(&productDetailMap)
+	saveDataInDatabase(productDetailMap["ProductName"], productDetailMap["ProductImageUrl"], productDetailMap["ProductDescription"], productDetailMap["ProductPrice"], productDetailMap["ProductReviews"], time.Now())
 }
 
 func main() {
 	handleRequests()
 }
 
-func mysqlConnectionURL() string {
+func connectMySql() *sql.DB {
 	mysqlConnectionURL := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", os.Getenv("MYSQL_USER"), os.Getenv("MYSQL_ROOT_PASSWORD"), os.Getenv("MYSQL_HOST"), os.Getenv("MYSQL_PORT"), os.Getenv("MYSQL_DATABASE"))
-	return mysqlConnectionURL
+	db, err := sql.Open("mysql", mysqlConnectionURL)
+	if err != nil {
+		logError(err)
+	}
+	return db
 }
 
 func logError(err error) {
@@ -40,14 +44,8 @@ func logError(err error) {
 
 func saveDataInDatabase(productName string, productImageUrl string, productDescription string, productPrice string, productReviews string, createdTime time.Time) {
 
-	// Connecting to database
-	db, err := sql.Open("mysql", mysqlConnectionURL())
-	if err != nil {
-		logError(err)
-	}
-
 	// Insert values into database
-	sqlInsertStatement, err := db.Prepare("INSERT INTO AmazonProductDetails (ProductName,ProductImageUrl,ProductDescription,ProductPrice,ProductReviews,CreatedTime) VALUES (?,?,?,?,?,?);")
+	sqlInsertStatement, err := connectMySql().Prepare("INSERT INTO AmazonProductDetails (ProductName,ProductImageUrl,ProductDescription,ProductPrice,ProductReviews,CreatedTime) VALUES (?,?,?,?,?,?);")
 	if err != nil {
 		logError(err)
 	}
@@ -57,5 +55,5 @@ func saveDataInDatabase(productName string, productImageUrl string, productDescr
 		logError(err)
 	}
 
-	defer db.Close()
+	defer connectMySql().Close()
 }

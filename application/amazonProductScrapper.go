@@ -26,14 +26,16 @@ var ProductDetails []ProductDetail
 
 func handleRequests() {
 	myRouter := mux.NewRouter().StrictSlash(true)
-	myRouter.HandleFunc("/scrap/product", scrapAmazonProduct).Methods("POST")
+	myRouter.HandleFunc("/scrape/product", scrapAmazonProduct).Methods("POST")
 	log.Fatal(http.ListenAndServe(":"+os.Getenv("SCRAPPER_PORT"), myRouter))
 }
 
 func scrapAmazonProduct(w http.ResponseWriter, req *http.Request) {
-	productUrl := req.URL.Query().Get("url")
+	var fetchUrl map[string]string
+	json.NewDecoder(req.Body).Decode(&fetchUrl)
+	productUrl := fetchUrl["url"]
 	if productUrl == "" {
-		fmt.Fprintf(w, "Please provide proper url")
+		fmt.Fprintf(w, "Please provide proper amazon product page url")
 	} else {
 		getProductDetails(productUrl)
 		json.NewEncoder(w).Encode(ProductDetails)
