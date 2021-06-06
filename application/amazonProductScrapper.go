@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
@@ -25,15 +26,19 @@ var ProductDetails []ProductDetail
 
 func handleRequests() {
 	myRouter := mux.NewRouter().StrictSlash(true)
-	myRouter.HandleFunc("/scrapproduct", scrapAmazonProduct).Methods("POST")
-	log.Fatal(http.ListenAndServe(":10000", myRouter))
+	myRouter.HandleFunc("/scrap/product", scrapAmazonProduct).Methods("POST")
+	log.Fatal(http.ListenAndServe(":"+os.Getenv("STOREDATA_PORT"), myRouter))
 }
 
 func scrapAmazonProduct(w http.ResponseWriter, req *http.Request) {
 	productUrl := req.URL.Query().Get("url")
-	getProductDetails(productUrl)
-	json.NewEncoder(w).Encode(ProductDetails)
-	fmt.Println("Endpoint Hit : return product details")
+	if productUrl == "" {
+		fmt.Fprintf(w, "Please provide proper url")
+	} else {
+		getProductDetails(productUrl)
+		json.NewEncoder(w).Encode(ProductDetails)
+		fmt.Println("Endpoint Hit : return product details")
+	}
 }
 
 func main() {
@@ -114,7 +119,7 @@ func getProductDetails(productUrl string) {
 		fmt.Println(err.Error())
 	}
 
-	http.Post("http://scrapperdatahandle:10001/scrapData", "application/json", bytes.NewBuffer(json_data))
+	http.Post("http://scrapperdatahandler:10001/scrapData", "application/json", bytes.NewBuffer(json_data))
 
 }
 
@@ -122,5 +127,5 @@ func getProductImage(imgSource string, isProductImage bool) (soruce string) {
 	if isProductImage {
 		return imgSource
 	}
-	return "nothing"
+	return ""
 }

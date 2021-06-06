@@ -9,33 +9,37 @@ services:
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     ports:
-      - '8307:3306'
+      - '8307:${MYSQL_PORT}'
     expose:
-      - '3306'
+      - '${MYSQL_PORT}'
+    command: --init-file /datamodel/init.sql
     volumes:
-      - my-sql:/var/lib/mysql
+      - ./volumes/init.sql:/datamodel/init.sql
 
-  scrapperdatahandle:   
+  scrapperdatahandler:   
     build:
       context: ./datamodel
       dockerfile: Dockerfile
-    env_file: ./datamodel/.env
+    env_file: .env
     depends_on:
       - mysqldb
     networks:     
      - default
     ports:
-      - "8083:10001" 
+      - "8083:${STOREDATA_PORT}" 
      
   scrapperservice:
     build:
       context: ./application
       dockerfile: Dockerfile
+    env_file: .env
+    depends_on: 
+      - scrapperdatahandler
     networks:
       - default
     ports:
-      - "8084:10000"
+      - "8084:${SCRAPPER_PORT}"
 
 volumes:
-  my-sql:
+  volumes:
 
