@@ -27,7 +27,6 @@ var ProductDetails []ProductDetail
 func handleRequests() {
 	myRouter := mux.NewRouter().StrictSlash(true)
 	myRouter.HandleFunc("/scrap/product", scrapAmazonProduct).Methods("POST")
-	fmt.Println(os.Getenv("SCRAPPER_PORT"))
 	log.Fatal(http.ListenAndServe(":"+os.Getenv("SCRAPPER_PORT"), myRouter))
 }
 
