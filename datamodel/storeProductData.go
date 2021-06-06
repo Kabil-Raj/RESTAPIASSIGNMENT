@@ -20,7 +20,6 @@ func handleRequests() {
 }
 
 func productScrappedData(w http.ResponseWriter, req *http.Request) {
-	fmt.Println(("checking.."))
 	var result map[string]string
 	json.NewDecoder(req.Body).Decode(&result)
 	saveDataInDatabase(result["ProductName"], result["ProductImageUrl"], result["ProductDescription"], result["ProductPrice"], result["ProductReviews"], time.Now())

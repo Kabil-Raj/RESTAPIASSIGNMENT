@@ -27,7 +27,8 @@ var ProductDetails []ProductDetail
 func handleRequests() {
 	myRouter := mux.NewRouter().StrictSlash(true)
 	myRouter.HandleFunc("/scrap/product", scrapAmazonProduct).Methods("POST")
-	log.Fatal(http.ListenAndServe(":"+os.Getenv("STOREDATA_PORT"), myRouter))
+	fmt.Println(os.Getenv("SCRAPPER_PORT"))
+	log.Fatal(http.ListenAndServe(":"+os.Getenv("SCRAPPER_PORT"), myRouter))
 }
 
 func scrapAmazonProduct(w http.ResponseWriter, req *http.Request) {
@@ -96,7 +97,10 @@ func getProductDetails(productUrl string) {
 	})
 
 	c.OnHTML("#imgTagWrapperId", func(e *colly.HTMLElement) {
-		productImageUrl = getProductImage(e.DOM.Children().Attr("src"))
+		imgSource, isSourceImage := e.DOM.Children().Attr("src")
+		if isSourceImage {
+			productImageUrl = imgSource
+		}
 	})
 
 	c.Visit(productUrl)
@@ -117,15 +121,8 @@ func getProductDetails(productUrl string) {
 
 	if err != nil {
 		fmt.Println(err.Error())
+	} else {
+		http.Post("http://scrapperdatahandler:"+os.Getenv("STOREDATA_PORT")+"/storedata", "application/json", bytes.NewBuffer(json_data))
 	}
 
-	http.Post("http://scrapperdatahandler:10001/scrapData", "application/json", bytes.NewBuffer(json_data))
-
-}
-
-func getProductImage(imgSource string, isProductImage bool) (soruce string) {
-	if isProductImage {
-		return imgSource
-	}
-	return ""
 }
