@@ -114,7 +114,7 @@ func getProductDetails(productUrl string) {
 		fmt.Println(err.Error())
 	}
 
-	http.Post("http://app:10001/scrapData", "application/json", bytes.NewBuffer(json_data))
+	http.Post("http://scrapperdatahandle:10001/scrapData", "application/json", bytes.NewBuffer(json_data))
 
 }
 
