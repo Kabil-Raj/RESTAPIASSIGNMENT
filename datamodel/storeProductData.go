@@ -16,7 +16,37 @@ import (
 func handleRequests() {
 	myRouter := mux.NewRouter().StrictSlash(true)
 	myRouter.HandleFunc("/storedata", storeProductData).Methods("POST")
+	myRouter.HandleFunc("/get/productdata", getAllProductData).Methods("GET")
 	log.Fatal(http.ListenAndServe(":"+os.Getenv("STOREDATA_PORT"), myRouter))
+}
+
+func getAllProductData(w http.ResponseWriter, req *http.Request) {
+
+	type ProductDetail struct {
+		ID                 int    `json:"ID"`
+		ProductName        string `json:"ProductName"`
+		ProductImageUrl    string `json:"ProductImageUrl"`
+		ProductDescription string `json:"ProductDescription"`
+		ProductPrice       string `json:"ProductPrice"`
+		ProductReviews     string `json:"ProductReviews"`
+		CreatedTime        string `json:"CreatedTime"`
+	}
+	var ProductDetails []ProductDetail
+
+	fetchProductDetails, err := connectMySql().Query("SELECT * FROM AmazonProductDetails")
+	if err != nil {
+		logError(err)
+	}
+	defer fetchProductDetails.Close()
+	for fetchProductDetails.Next() {
+		var productDetails ProductDetail
+		err := fetchProductDetails.Scan(&productDetails.ID, &productDetails.ProductName, &productDetails.ProductImageUrl, &productDetails.ProductDescription, &productDetails.ProductPrice, &productDetails.ProductReviews, &productDetails.CreatedTime)
+		if err != nil {
+			logError(err)
+		}
+		ProductDetails = append(ProductDetails, productDetails)
+	}
+	json.NewEncoder(w).Encode(ProductDetails)
 }
 
 func storeProductData(w http.ResponseWriter, req *http.Request) {

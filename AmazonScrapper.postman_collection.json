@@ -61,6 +61,65 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "GetDataFromDB",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8083/get/productdata",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"get",
+						"productdata"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "ExampleData",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8083/get/productdata",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"get",
+								"productdata"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Mon, 07 Jun 2021 03:18:43 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "648"
+						},
+						{
+							"key": "Content-Type",
+							"value": "text/plain; charset=utf-8"
+						}
+					],
+					"cookie": [],
+					"body": "[\n    {\n        \"ID\": 1,\n        \"ProductName\": \"Yuwell 8F-5A Portable Oxygen Concentrator Machine (93% concentration at 5L)\",\n        \"ProductImageUrl\": \"https://images-eu.ssl-images-amazon.com/images/I/31%2BzlnVzZGS._SX300_SY300_QL70_ML2_.jpg\",\n        \"ProductDescription\": \"This is a compact high quality and light weight medical grade Oxygen Concentrator with 5LMP capacity.\",\n        \"ProductPrice\": \" 40,799.00\",\n        \"ProductReviews\": \"21 ratings\",\n        \"CreatedTime\": \"2021-06-07 03:18:21\"\n    },\n    {\n        \"ID\": 2,\n        \"ProductName\": \"exampleProduct\",\n        \"ProductImageUrl\": \"https://image/url.jpg\",\n        \"ProductDescription\": \"description about the product\",\n        \"ProductPrice\": \"499\",\n        \"ProductReviews\": \"250\",\n        \"CreatedTime\": \"2021-06-07 03:18:40\"\n    }\n]"
+				}
+			]
 		}
 	]
 }

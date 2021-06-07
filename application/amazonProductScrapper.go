@@ -39,7 +39,6 @@ func scrapeAmazonProduct(w http.ResponseWriter, req *http.Request) {
 	} else {
 		getProductDetails(productUrl)
 		json.NewEncoder(w).Encode(ProductDetails)
-		fmt.Println("Endpoint Hit : return product details")
 	}
 }
 
